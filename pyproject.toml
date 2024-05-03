@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "thesis-benchmarks"
+version = "0.1.0"
+description = ""
+authors = ["Warre Dujardin <warre.dujardin@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.2"
+matplotlib = "^3.8.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
