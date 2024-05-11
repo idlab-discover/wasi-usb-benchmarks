@@ -1,7 +1,7 @@
 x86 Binary Size Without USB Host Component: 14612K   wasmtime-nousb-x86
 x86 Binary Size With USB Host Component: 14772K   wasmtime-usb-x86
-Aarch64 Binary Size Without USB Host Component: 12964K   wasmtime-nousb-aarch64
-Aarch64 Binary Size With USB Host Component: 13184K   wasmtime-usb-aarch64
+AArch64 Binary Size Without USB Host Component: 12964K   wasmtime-nousb-aarch64
+AArch64 Binary Size With USB Host Component: 13184K   wasmtime-usb-aarch64
 x86 Binary Size (Windows) Without USB Host Component: 14175KB
 x86 Binary Size (Windows) With USB Host Component: 14450KB
 
@@ -29,6 +29,30 @@ Maximum resident set size (kbytes): 28140
 Maximum resident set size (kbytes): 27656
 Maximum resident set size (kbytes): 27952
 
+AArch64 Memory Usage Without USB Host Component:
+Maximum resident set size (kbytes): 18960
+Maximum resident set size (kbytes): 19820
+Maximum resident set size (kbytes): 19012
+Maximum resident set size (kbytes): 19632
+Maximum resident set size (kbytes): 19164
+Maximum resident set size (kbytes): 18932
+Maximum resident set size (kbytes): 19548
+Maximum resident set size (kbytes): 19396
+Maximum resident set size (kbytes): 19012
+Maximum resident set size (kbytes): 18896
+
+AArch64 Memory Usage With USB Host Component:
+Maximum resident set size (kbytes): 20132
+Maximum resident set size (kbytes): 18980
+Maximum resident set size (kbytes): 19920
+Maximum resident set size (kbytes): 19576
+Maximum resident set size (kbytes): 19172
+Maximum resident set size (kbytes): 19880
+Maximum resident set size (kbytes): 19660
+Maximum resident set size (kbytes): 19108
+Maximum resident set size (kbytes): 19692
+Maximum resident set size (kbytes): 19196
+
 x86 Memory Usage (Windows) Without USB Host Component:
 12720K
 12748K
@@ -42,27 +66,3 @@ x86 Memory Usage (Windows) With USB Host Component:
 14808K
 13224K
 14976K
-
-Aarch64 Memory Usage Without USB Host Component:
-Maximum resident set size (kbytes): 18960
-Maximum resident set size (kbytes): 19820
-Maximum resident set size (kbytes): 19012
-Maximum resident set size (kbytes): 19632
-Maximum resident set size (kbytes): 19164
-Maximum resident set size (kbytes): 18932
-Maximum resident set size (kbytes): 19548
-Maximum resident set size (kbytes): 19396
-Maximum resident set size (kbytes): 19012
-Maximum resident set size (kbytes): 18896
-
-Aarch64 Memory Usage With USB Host Component:
-Maximum resident set size (kbytes): 20132
-Maximum resident set size (kbytes): 18980
-Maximum resident set size (kbytes): 19920
-Maximum resident set size (kbytes): 19576
-Maximum resident set size (kbytes): 19172
-Maximum resident set size (kbytes): 19880
-Maximum resident set size (kbytes): 19660
-Maximum resident set size (kbytes): 19108
-Maximum resident set size (kbytes): 19692
-Maximum resident set size (kbytes): 19196
