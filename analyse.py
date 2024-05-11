@@ -1,5 +1,7 @@
+from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 # Colors
 color_x86_nousb = "#ed7700"
@@ -19,18 +21,24 @@ windows_usb = 14450  # KB
 
 
 # function to add value labels
-def add_labels_kilobyte(y):
+def add_labels_barplot(y):
     ylim = plt.gca().get_ylim()
     yrange = ylim[1] - ylim[0]
     for i in range(len(y)):
-        plt.text(i, y[i] + yrange*0.0075, f"{y[i]:.0f} kB", ha="center", va="bottom")
+        plt.text(i, y[i] + yrange * 0.0075, f"{y[i]:.0f} kB", ha="center", va="bottom")
 
 
-def add_labels_megabyte_per_second(y):
+def add_labels_boxplot(y, unit: str, precision: int = 0):
     ylim = plt.gca().get_ylim()
     yrange = ylim[1] - ylim[0]
     for i in range(len(y)):
-        plt.text(i + 1.25, y[i] - yrange*0.02, f"{y[i]:.0f} MB/s", ha="center", va="bottom")
+        plt.text(
+            i + 1.25,
+            y[i] - yrange * 0.02,
+            f"{y[i]:.{precision}f} {unit}",
+            ha="center",
+            va="bottom",
+        )
 
 
 plt.figure(figsize=(16, 6))
@@ -53,7 +61,7 @@ colors = [
     color_windows_usb,
 ]
 plt.bar(x, y, color=colors)
-add_labels_kilobyte(y)
+add_labels_barplot(y)
 plt.savefig("figures/filesize.png")
 plt.close()
 
@@ -113,9 +121,11 @@ y = [
     avg_windows_usb_mem,
 ]
 plt.bar(x, y, color=colors)
-add_labels_kilobyte(y)
+add_labels_barplot(y)
 plt.savefig("figures/memory.png")
 plt.close()
+
+######### Throughput #########
 
 # In megabytes/second
 mass_storage_x86_native = pd.read_csv(
@@ -137,21 +147,15 @@ mass_storage_windows_wasm = pd.read_csv(
     "./mass-storage/raw_benchmark_report_windows_wasm.csv"
 ) / (1024 * 1024)
 
-# mass_storage_x86_native.plot(kind="box", title="boxplot native (x86)", showmeans=True)
-# mass_storage_x86_wasm.plot(kind="box", title="boxplot wasm (x86)", showmeans=True)
-# mass_storage_aarch64_native.plot(kind="box", title="boxplot native (aarch64)", showmeans=True)
-# mass_storage_aarch64_wasm.plot(kind="box", title="boxplot wasm (aarch64)", showmeans=True)
-# mass_storage_windows_native.plot(kind="box", title="boxplot native (windows)", showmeans=True)
-# mass_storage_windows_wasm.plot(kind="box", title="boxplot wasm (windows)", showmeans=True)
-
 
 def plot_boxplot(df: pd.DataFrame, title: str, filename: str):
     # fig = plt.figure(figsize=(6, 6))
     df.plot(kind="box", title=title, figsize=(6, 4))
     plt.ylabel("Speed (MB/s)")
-    add_labels_megabyte_per_second([df["Native"].median(), df["WebAssembly"].median()])
+    add_labels_boxplot([df["Native"].median(), df["WebAssembly"].median()], "MB/s")
     plt.savefig(filename)
     plt.close()
+
 
 def create_df(native_df, wasm_df, key):
     return pd.DataFrame(
@@ -161,34 +165,210 @@ def create_df(native_df, wasm_df, key):
         ]
     ).transpose()
 
+
 seq_read_x86 = create_df(mass_storage_x86_native, mass_storage_x86_wasm, "SEQ READ")
-seq_read_aarch64 = create_df(mass_storage_aarch64_native, mass_storage_aarch64_wasm, "SEQ READ")
-seq_read_windows = create_df(mass_storage_windows_native, mass_storage_windows_wasm, "SEQ READ")
+seq_read_aarch64 = create_df(
+    mass_storage_aarch64_native, mass_storage_aarch64_wasm, "SEQ READ"
+)
+seq_read_windows = create_df(
+    mass_storage_windows_native, mass_storage_windows_wasm, "SEQ READ"
+)
 
 seq_write_x86 = create_df(mass_storage_x86_native, mass_storage_x86_wasm, "SEQ WRITE")
-seq_write_aarch64 = create_df(mass_storage_aarch64_native, mass_storage_aarch64_wasm, "SEQ WRITE")
-seq_write_windows = create_df(mass_storage_windows_native, mass_storage_windows_wasm, "SEQ WRITE")
+seq_write_aarch64 = create_df(
+    mass_storage_aarch64_native, mass_storage_aarch64_wasm, "SEQ WRITE"
+)
+seq_write_windows = create_df(
+    mass_storage_windows_native, mass_storage_windows_wasm, "SEQ WRITE"
+)
 
 rnd_read_x86 = create_df(mass_storage_x86_native, mass_storage_x86_wasm, "RND READ")
-rnd_read_aarch64 = create_df(mass_storage_aarch64_native, mass_storage_aarch64_wasm, "RND READ")
-rnd_read_windows = create_df(mass_storage_windows_native, mass_storage_windows_wasm, "RND READ")
+rnd_read_aarch64 = create_df(
+    mass_storage_aarch64_native, mass_storage_aarch64_wasm, "RND READ"
+)
+rnd_read_windows = create_df(
+    mass_storage_windows_native, mass_storage_windows_wasm, "RND READ"
+)
 
-rnd_write_x86 = create_df(mass_storage_x86_native, mass_storage_x86_wasm, "RND WRITE")  
-rnd_write_aarch64 = create_df(mass_storage_aarch64_native, mass_storage_aarch64_wasm, "RND WRITE")
-rnd_write_windows = create_df(mass_storage_windows_native, mass_storage_windows_wasm, "RND WRITE")
+rnd_write_x86 = create_df(mass_storage_x86_native, mass_storage_x86_wasm, "RND WRITE")
+rnd_write_aarch64 = create_df(
+    mass_storage_aarch64_native, mass_storage_aarch64_wasm, "RND WRITE"
+)
+rnd_write_windows = create_df(
+    mass_storage_windows_native, mass_storage_windows_wasm, "RND WRITE"
+)
 
-plot_boxplot(seq_read_x86, "Sequential read speed (x86 Linux)", "figures/seq_read_x86.png")
-plot_boxplot(seq_read_aarch64, "Sequential read speed (AArch64 Linux)", "figures/seq_read_aarch64.png")
-plot_boxplot(seq_read_windows, "Sequential read speed (x86 Windows)", "figures/seq_read_windows.png")
+plot_boxplot(
+    seq_read_x86, "Sequential read speed (x86 Linux)", "figures/seq_read_x86.png"
+)
+plot_boxplot(
+    seq_read_aarch64,
+    "Sequential read speed (AArch64 Linux)",
+    "figures/seq_read_aarch64.png",
+)
+plot_boxplot(
+    seq_read_windows,
+    "Sequential read speed (x86 Windows)",
+    "figures/seq_read_windows.png",
+)
 
-plot_boxplot(seq_write_x86, "Sequential write speed (x86 Linux)", "figures/seq_write_x86.png")
-plot_boxplot(seq_write_aarch64, "Sequential write speed (AArch64 Linux)", "figures/seq_write_aarch64.png")
-plot_boxplot(seq_write_windows, "Sequential write speed (x86 Windows)", "figures/seq_write_windows.png")
+plot_boxplot(
+    seq_write_x86, "Sequential write speed (x86 Linux)", "figures/seq_write_x86.png"
+)
+plot_boxplot(
+    seq_write_aarch64,
+    "Sequential write speed (AArch64 Linux)",
+    "figures/seq_write_aarch64.png",
+)
+plot_boxplot(
+    seq_write_windows,
+    "Sequential write speed (x86 Windows)",
+    "figures/seq_write_windows.png",
+)
 
 plot_boxplot(rnd_read_x86, "Random read speed (x86 Linux)", "figures/rnd_read_x86.png")
-plot_boxplot(rnd_read_aarch64, "Random read speed (AArch64 Linux)", "figures/rnd_read_aarch64.png")
-plot_boxplot(rnd_read_windows, "Random read speed (x86 Windows)", "figures/rnd_read_windows.png")   
+plot_boxplot(
+    rnd_read_aarch64,
+    "Random read speed (AArch64 Linux)",
+    "figures/rnd_read_aarch64.png",
+)
+plot_boxplot(
+    rnd_read_windows, "Random read speed (x86 Windows)", "figures/rnd_read_windows.png"
+)
 
-plot_boxplot(rnd_write_x86, "Random write speed (x86 Linux)", "figures/rnd_write_x86.png")
-plot_boxplot(rnd_write_aarch64, "Random write speed (AArch64 Linux)", "figures/rnd_write_aarch64.png")
-plot_boxplot(rnd_write_windows, "Random write speed (x86 Windows)", "figures/rnd_write_windows.png")
+plot_boxplot(
+    rnd_write_x86, "Random write speed (x86 Linux)", "figures/rnd_write_x86.png"
+)
+plot_boxplot(
+    rnd_write_aarch64,
+    "Random write speed (AArch64 Linux)",
+    "figures/rnd_write_aarch64.png",
+)
+plot_boxplot(
+    rnd_write_windows,
+    "Random write speed (x86 Windows)",
+    "figures/rnd_write_windows.png",
+)
+
+######### Latency #########
+
+
+def load_latency_file(filename):
+    return np.array([float(i) for i in Path(filename).read_text().splitlines()])
+
+
+# In milliseconds
+latency_bulk_x86_native_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_x86_native_32bytes.txt"
+)
+latency_bulk_x86_wasm_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_x86_wasm_32bytes.txt"
+)
+latency_bulk_aarch64_native_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_aarch64_native_32bytes.txt"
+)
+latency_bulk_aarch64_wasm_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_aarch64_wasm_32bytes.txt"
+)
+latency_bulk_windows_native_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_windows_native_32bytes.txt"
+)
+latency_bulk_windows_wasm_32bytes = load_latency_file(
+    "./ping-bulk/latencies_in_ms_windows_wasm_32bytes.txt"
+)
+
+latency_interrupt_x86_native_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_x86_native_32bytes.txt"
+)
+latency_interrupt_x86_wasm_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_x86_wasm_32bytes.txt"
+)
+latency_interrupt_aarch64_native_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_aarch64_native_32bytes.txt"
+)
+latency_interrupt_aarch64_wasm_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_aarch64_wasm_32bytes.txt"
+)
+latency_interrupt_windows_native_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_windows_native_32bytes.txt"
+)
+latency_interrupt_windows_wasm_32bytes = load_latency_file(
+    "./ping-interrupt/latencies_in_ms_windows_wasm_32bytes.txt"
+)
+
+latency_isochronous_x86_native_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_x86_native_32bytes.txt"
+)
+latency_isochronous_x86_wasm_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_x86_wasm_32bytes.txt"
+)
+latency_isochronous_aarch64_native_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_aarch64_native_32bytes.txt"
+)
+latency_isochronous_aarch64_wasm_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_aarch64_wasm_32bytes.txt"
+)
+latency_isochronous_windows_native_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_windows_native_32bytes.txt"
+)
+latency_isochronous_windows_wasm_32bytes = load_latency_file(
+    "./ping-isochronous/latencies_in_ms_windows_wasm_32bytes.txt"
+)
+
+
+def plot_latencies(latencies: list[np.ndarray], title: str, filename: str):
+    plt.figure(figsize=(6, 4))
+    plt.boxplot(latencies, labels=["Native", "WebAssembly"])
+    add_labels_boxplot([np.median(l) for l in latencies], "ms", 3)
+    plt.title(title)
+    plt.ylabel("Latency (ms)")
+    plt.savefig(filename)
+    plt.close()
+
+plot_latencies(
+    [latency_bulk_x86_native_32bytes, latency_bulk_x86_wasm_32bytes],
+    "Bulk Endpoint Latency, 32 byte packet (x86 Linux)",
+    "figures/latency_32bytes_x86.png",
+)
+plot_latencies(
+    [latency_bulk_aarch64_native_32bytes, latency_bulk_aarch64_wasm_32bytes],
+    "Bulk Endpoint Latency, 32 byte packet (AArch64 Linux)",
+    "figures/latency_32bytes_aarch64.png",
+)
+plot_latencies(
+    [latency_bulk_windows_native_32bytes, latency_bulk_windows_wasm_32bytes],
+    "Bulk Endpoint Latency, 32 byte packet (x86 Windows)",
+    "figures/latency_32bytes_windows.png",
+)
+
+plot_latencies(
+    [latency_interrupt_x86_native_32bytes, latency_interrupt_x86_wasm_32bytes],
+    "Interrupt Endpoint Latency, 32 byte packet (x86 Linux)",
+    "figures/latency_32bytes_interrupt_x86.png",
+)
+plot_latencies(
+    [latency_interrupt_aarch64_native_32bytes, latency_interrupt_aarch64_wasm_32bytes],
+    "Interrupt Endpoint Latency, 32 byte packet (AArch64 Linux)",    
+    "figures/latency_32bytes_interrupt_aarch64.png",
+)
+plot_latencies(
+    [latency_interrupt_windows_native_32bytes, latency_interrupt_windows_wasm_32bytes],
+    "Interrupt Endpoint Latency, 32 byte packet (x86 Windows)",
+    "figures/latency_32bytes_interrupt_windows.png",
+)
+
+plot_latencies(
+    [latency_isochronous_x86_native_32bytes, latency_isochronous_x86_wasm_32bytes],
+    "Isochronous Endpoint Latency, 32 byte packet (x86 Linux)",
+    "figures/latency_32bytes_isochronous_x86.png",
+)
+plot_latencies(
+    [latency_isochronous_aarch64_native_32bytes, latency_isochronous_aarch64_wasm_32bytes],
+    "Isochronous Endpoint Latency, 32 byte packet (AArch64 Linux)",
+    "figures/latency_32bytes_isochronous_aarch64.png",
+)
+plot_latencies(
+    [latency_isochronous_windows_native_32bytes, latency_isochronous_windows_wasm_32bytes],
+    "Isochronous Endpoint Latency, 32 byte packet (x86 Windows)",
+    "figures/latency_32bytes_isochronous_windows.png",
+)
