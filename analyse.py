@@ -25,31 +25,53 @@ def add_labels_barplot(y):
     ylim = plt.gca().get_ylim()
     yrange = ylim[1] - ylim[0]
     for i in range(len(y)):
-        plt.text(i, y[i] + yrange * 0.0075, f"{y[i]:.0f} kB", ha="center", va="bottom")
+        if i % 2 == 0:
+            plt.text(
+                i, y[i] + yrange * 0.0075, f"{y[i]:.0f} kB", ha="center", va="bottom"
+            )
+        else:
+            percentage_increase = (y[i] - y[i - 1]) / y[i - 1] * 100
+            plt.text(
+                i,
+                y[i] + yrange * 0.0075,
+                f"{y[i]:.0f} kB ({percentage_increase:+.1f}%)",
+                ha="center",
+                va="bottom",
+            )
 
 
 def add_labels_boxplot(y, unit: str, precision: int = 0):
     ylim = plt.gca().get_ylim()
     yrange = ylim[1] - ylim[0]
     for i in range(len(y)):
-        plt.text(
-            i + 1.25,
-            y[i] - yrange * 0.02,
-            f"{y[i]:.{precision}f} {unit}",
-            ha="center",
-            va="bottom",
-        )
+        if i % 2 == 0:
+            plt.text(
+                i + 1.1,
+                y[i] + yrange * 0.02,
+                f"{y[i]:.{precision}f} {unit}",
+                ha="left",
+                va="top",
+            )
+        else:
+            percentage_increase = (y[i] - y[i - 1]) / y[i - 1] * 100
+            plt.text(
+                i + 1.1,
+                y[i] + yrange * 0.02,
+                f"{y[i]:.{precision}f} {unit}\n({percentage_increase:+.1f}%)",
+                ha="left",
+                va="top",
+            )
 
 
-plt.figure(figsize=(16, 6))
+plt.figure(figsize=(10, 6))
 plt.ylabel("File Size (kB)")
 x = [
-    "x86 Linux Baseline",
-    "x86 Linux USB",
-    "AArch64 Linux Baseline",
-    "AArch64 Linux USB",
-    "x86 Windows Baseline",
-    "x86 Windows USB",
+    "x86 Linux\nBaseline",
+    "x86 Linux\nUSB",
+    "AArch64 Linux\nBaseline",
+    "AArch64 Linux\nUSB",
+    "x86 Windows\nBaseline",
+    "x86 Windows\nUSB",
 ]
 y = [x86_nousb, x86_usb, aarch64_nousb, aarch64_usb, windows_nousb, windows_usb]
 colors = [
@@ -102,15 +124,15 @@ avg_aarch64_usb_mem = sum(aarch64_usb_mem) / len(aarch64_usb_mem)
 avg_windows_nousb_mem = sum(windows_nousb_mem) / len(windows_nousb_mem)
 avg_windows_usb_mem = sum(windows_usb_mem) / len(windows_usb_mem)
 
-plt.figure(figsize=(16, 6))
+plt.figure(figsize=(10, 6))
 plt.ylabel("Memory Usage (kB)")
 x = [
-    "x86 Linux Baseline",
-    "x86 Linux USB",
-    "AArch64 Linux Baseline",
-    "AArch64 Linux USB",
-    "x86 Windows Baseline",
-    "x86 Windows USB",
+    "x86 Linux\nBaseline",
+    "x86 Linux\nUSB",
+    "AArch64 Linux\nBaseline",
+    "AArch64 Linux\nUSB",
+    "x86 Windows\nBaseline",
+    "x86 Windows\nUSB",
 ]
 y = [
     avg_x86_nousb_mem,
@@ -152,7 +174,8 @@ def plot_boxplot(df: pd.DataFrame, title: str, filename: str):
     # fig = plt.figure(figsize=(6, 6))
     df.plot(kind="box", title=title, figsize=(6, 4))
     plt.ylabel("Speed (MB/s)")
-    add_labels_boxplot([df["Native"].median(), df["WebAssembly"].median()], "MB/s")
+    add_labels_boxplot([df["Native"].median(), df["WebAssembly"].median()], "MB/s", 1)
+    plt.gca()
     plt.savefig(filename)
     plt.close()
 
@@ -250,6 +273,13 @@ plot_boxplot(
     "figures/rnd_write_windows.png",
 )
 
+print("x86 Linux webassembly vs native median")
+print(f"Delta: {np.median(seq_read_x86['Native']) - np.median(seq_read_x86['WebAssembly']):.2f} MB/s")
+print("AArch64 Linux webassembly vs native median")
+print(f"Delta: {np.median(seq_read_aarch64['Native']) - np.median(seq_read_aarch64['WebAssembly']):.2f} MB/s")
+print("Windows webassembly vs native median")
+print(f"Delta: {np.median(seq_read_windows['Native']) - np.median(seq_read_windows['WebAssembly']):.2f} MB/s")
+
 ######### Latency #########
 
 
@@ -325,20 +355,21 @@ def plot_latencies(latencies: list[np.ndarray], title: str, filename: str):
     plt.savefig(filename)
     plt.close()
 
+
 plot_latencies(
     [latency_bulk_x86_native_32bytes, latency_bulk_x86_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (x86 Linux)",
-    "figures/latency_32bytes_x86.png",
+    "figures/latency_32bytes_bulk_x86.png",
 )
 plot_latencies(
     [latency_bulk_aarch64_native_32bytes, latency_bulk_aarch64_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (AArch64 Linux)",
-    "figures/latency_32bytes_aarch64.png",
+    "figures/latency_32bytes_bulk_aarch64.png",
 )
 plot_latencies(
     [latency_bulk_windows_native_32bytes, latency_bulk_windows_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (x86 Windows)",
-    "figures/latency_32bytes_windows.png",
+    "figures/latency_32bytes_bulk_windows.png",
 )
 
 plot_latencies(
@@ -348,7 +379,7 @@ plot_latencies(
 )
 plot_latencies(
     [latency_interrupt_aarch64_native_32bytes, latency_interrupt_aarch64_wasm_32bytes],
-    "Interrupt Endpoint Latency, 32 byte packet (AArch64 Linux)",    
+    "Interrupt Endpoint Latency, 32 byte packet (AArch64 Linux)",
     "figures/latency_32bytes_interrupt_aarch64.png",
 )
 plot_latencies(
@@ -363,12 +394,18 @@ plot_latencies(
     "figures/latency_32bytes_isochronous_x86.png",
 )
 plot_latencies(
-    [latency_isochronous_aarch64_native_32bytes, latency_isochronous_aarch64_wasm_32bytes],
+    [
+        latency_isochronous_aarch64_native_32bytes,
+        latency_isochronous_aarch64_wasm_32bytes,
+    ],
     "Isochronous Endpoint Latency, 32 byte packet (AArch64 Linux)",
     "figures/latency_32bytes_isochronous_aarch64.png",
 )
 plot_latencies(
-    [latency_isochronous_windows_native_32bytes, latency_isochronous_windows_wasm_32bytes],
+    [
+        latency_isochronous_windows_native_32bytes,
+        latency_isochronous_windows_wasm_32bytes,
+    ],
     "Isochronous Endpoint Latency, 32 byte packet (x86 Windows)",
     "figures/latency_32bytes_isochronous_windows.png",
 )
