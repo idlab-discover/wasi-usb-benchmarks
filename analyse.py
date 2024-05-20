@@ -84,7 +84,7 @@ colors = [
 ]
 plt.bar(x, y, color=colors)
 add_labels_barplot(y)
-plt.savefig("figures/filesize.png")
+plt.savefig("figures/filesize.svg")
 plt.close()
 
 ######### Memory usage #########
@@ -144,7 +144,7 @@ y = [
 ]
 plt.bar(x, y, color=colors)
 add_labels_barplot(y)
-plt.savefig("figures/memory.png")
+plt.savefig("figures/memory.svg")
 plt.close()
 
 ######### Throughput #########
@@ -224,55 +224,55 @@ rnd_write_windows = create_df(
 )
 
 plot_boxplot(
-    seq_read_x86, "Sequential read speed (x86 Linux)", "figures/seq_read_x86.png"
+    seq_read_x86, "Sequential read speed (x86 Linux)", "figures/seq_read_x86.svg"
 )
 plot_boxplot(
     seq_read_aarch64,
     "Sequential read speed (AArch64 Linux)",
-    "figures/seq_read_aarch64.png",
+    "figures/seq_read_aarch64.svg",
 )
 plot_boxplot(
     seq_read_windows,
     "Sequential read speed (x86 Windows)",
-    "figures/seq_read_windows.png",
+    "figures/seq_read_windows.svg",
 )
 
 plot_boxplot(
-    seq_write_x86, "Sequential write speed (x86 Linux)", "figures/seq_write_x86.png"
+    seq_write_x86, "Sequential write speed (x86 Linux)", "figures/seq_write_x86.svg"
 )
 plot_boxplot(
     seq_write_aarch64,
     "Sequential write speed (AArch64 Linux)",
-    "figures/seq_write_aarch64.png",
+    "figures/seq_write_aarch64.svg",
 )
 plot_boxplot(
     seq_write_windows,
     "Sequential write speed (x86 Windows)",
-    "figures/seq_write_windows.png",
+    "figures/seq_write_windows.svg",
 )
 
-plot_boxplot(rnd_read_x86, "Random read speed (x86 Linux)", "figures/rnd_read_x86.png")
+plot_boxplot(rnd_read_x86, "Random read speed (x86 Linux)", "figures/rnd_read_x86.svg")
 plot_boxplot(
     rnd_read_aarch64,
     "Random read speed (AArch64 Linux)",
-    "figures/rnd_read_aarch64.png",
+    "figures/rnd_read_aarch64.svg",
 )
 plot_boxplot(
-    rnd_read_windows, "Random read speed (x86 Windows)", "figures/rnd_read_windows.png"
+    rnd_read_windows, "Random read speed (x86 Windows)", "figures/rnd_read_windows.svg"
 )
 
 plot_boxplot(
-    rnd_write_x86, "Random write speed (x86 Linux)", "figures/rnd_write_x86.png"
+    rnd_write_x86, "Random write speed (x86 Linux)", "figures/rnd_write_x86.svg"
 )
 plot_boxplot(
     rnd_write_aarch64,
     "Random write speed (AArch64 Linux)",
-    "figures/rnd_write_aarch64.png",
+    "figures/rnd_write_aarch64.svg",
 )
 plot_boxplot(
     rnd_write_windows,
     "Random write speed (x86 Windows)",
-    "figures/rnd_write_windows.png",
+    "figures/rnd_write_windows.svg",
 )
 
 print("x86 Linux webassembly vs native median")
@@ -363,39 +363,39 @@ def plot_latencies(latencies: list[np.ndarray], title: str, filename: str):
 plot_latencies(
     [latency_bulk_x86_native_32bytes, latency_bulk_x86_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (x86 Linux)",
-    "figures/latency_32bytes_bulk_x86.png",
+    "figures/latency_32bytes_bulk_x86.svg",
 )
 plot_latencies(
     [latency_bulk_aarch64_native_32bytes, latency_bulk_aarch64_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (AArch64 Linux)",
-    "figures/latency_32bytes_bulk_aarch64.png",
+    "figures/latency_32bytes_bulk_aarch64.svg",
 )
 plot_latencies(
     [latency_bulk_windows_native_32bytes, latency_bulk_windows_wasm_32bytes],
     "Bulk Endpoint Latency, 32 byte packet (x86 Windows)",
-    "figures/latency_32bytes_bulk_windows.png",
+    "figures/latency_32bytes_bulk_windows.svg",
 )
 
 plot_latencies(
     [latency_interrupt_x86_native_32bytes, latency_interrupt_x86_wasm_32bytes],
     "Interrupt Endpoint Latency, 32 byte packet (x86 Linux)",
-    "figures/latency_32bytes_interrupt_x86.png",
+    "figures/latency_32bytes_interrupt_x86.svg",
 )
 plot_latencies(
     [latency_interrupt_aarch64_native_32bytes, latency_interrupt_aarch64_wasm_32bytes],
     "Interrupt Endpoint Latency, 32 byte packet (AArch64 Linux)",
-    "figures/latency_32bytes_interrupt_aarch64.png",
+    "figures/latency_32bytes_interrupt_aarch64.svg",
 )
 plot_latencies(
     [latency_interrupt_windows_native_32bytes, latency_interrupt_windows_wasm_32bytes],
     "Interrupt Endpoint Latency, 32 byte packet (x86 Windows)",
-    "figures/latency_32bytes_interrupt_windows.png",
+    "figures/latency_32bytes_interrupt_windows.svg",
 )
 
 plot_latencies(
     [latency_isochronous_x86_native_32bytes, latency_isochronous_x86_wasm_32bytes],
     "Isochronous Endpoint Latency, 32 byte packet (x86 Linux)",
-    "figures/latency_32bytes_isochronous_x86.png",
+    "figures/latency_32bytes_isochronous_x86.svg",
 )
 plot_latencies(
     [
@@ -403,7 +403,7 @@ plot_latencies(
         latency_isochronous_aarch64_wasm_32bytes,
     ],
     "Isochronous Endpoint Latency, 32 byte packet (AArch64 Linux)",
-    "figures/latency_32bytes_isochronous_aarch64.png",
+    "figures/latency_32bytes_isochronous_aarch64.svg",
 )
 plot_latencies(
     [
@@ -411,5 +411,5 @@ plot_latencies(
         latency_isochronous_windows_wasm_32bytes,
     ],
     "Isochronous Endpoint Latency, 32 byte packet (x86 Windows)",
-    "figures/latency_32bytes_isochronous_windows.png",
+    "figures/latency_32bytes_isochronous_windows.svg",
 )
