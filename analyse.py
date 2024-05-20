@@ -173,6 +173,8 @@ mass_storage_windows_wasm = pd.read_csv(
 def plot_boxplot(df: pd.DataFrame, title: str, filename: str):
     # fig = plt.figure(figsize=(6, 6))
     df.plot(kind="box", title=title, figsize=(6, 4))
+    (ylim_low, ylim_high) = plt.gca().get_ylim()
+    plt.gca().set_ylim(0, ylim_high*1.025)
     plt.ylabel("Speed (MB/s)")
     add_labels_boxplot([df["Native"].median(), df["WebAssembly"].median()], "MB/s", 1)
     plt.gca()
@@ -349,6 +351,8 @@ latency_isochronous_windows_wasm_32bytes = load_latency_file(
 def plot_latencies(latencies: list[np.ndarray], title: str, filename: str):
     plt.figure(figsize=(6, 4))
     plt.boxplot(latencies, labels=["Native", "WebAssembly"])
+    (ylim_low, ylim_high) = plt.gca().get_ylim()
+    plt.gca().set_ylim(0, ylim_high*1.025)
     add_labels_boxplot([np.median(l) for l in latencies], "ms", 3)
     plt.title(title)
     plt.ylabel("Latency (ms)")
