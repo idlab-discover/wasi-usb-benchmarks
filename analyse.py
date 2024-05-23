@@ -362,39 +362,39 @@ def plot_latencies(latencies: list[np.ndarray], title: str, filename: str):
 
 plot_latencies(
     [latency_bulk_x86_native_32bytes, latency_bulk_x86_wasm_32bytes],
-    "Bulk Endpoint Latency, 32 byte packet (x86 Linux)",
+    "Bulk Endpoint Latency, 32-byte packet (x86 Linux)",
     "figures/latency_32bytes_bulk_x86.svg",
 )
 plot_latencies(
     [latency_bulk_aarch64_native_32bytes, latency_bulk_aarch64_wasm_32bytes],
-    "Bulk Endpoint Latency, 32 byte packet (AArch64 Linux)",
+    "Bulk Endpoint Latency, 32-byte packet (AArch64 Linux)",
     "figures/latency_32bytes_bulk_aarch64.svg",
 )
 plot_latencies(
     [latency_bulk_windows_native_32bytes, latency_bulk_windows_wasm_32bytes],
-    "Bulk Endpoint Latency, 32 byte packet (x86 Windows)",
+    "Bulk Endpoint Latency, 32-byte packet (x86 Windows)",
     "figures/latency_32bytes_bulk_windows.svg",
 )
 
 plot_latencies(
     [latency_interrupt_x86_native_32bytes, latency_interrupt_x86_wasm_32bytes],
-    "Interrupt Endpoint Latency, 32 byte packet (x86 Linux)",
+    "Interrupt Endpoint Latency, 32-byte packet (x86 Linux)",
     "figures/latency_32bytes_interrupt_x86.svg",
 )
 plot_latencies(
     [latency_interrupt_aarch64_native_32bytes, latency_interrupt_aarch64_wasm_32bytes],
-    "Interrupt Endpoint Latency, 32 byte packet (AArch64 Linux)",
+    "Interrupt Endpoint Latency, 32-byte packet (AArch64 Linux)",
     "figures/latency_32bytes_interrupt_aarch64.svg",
 )
 plot_latencies(
     [latency_interrupt_windows_native_32bytes, latency_interrupt_windows_wasm_32bytes],
-    "Interrupt Endpoint Latency, 32 byte packet (x86 Windows)",
+    "Interrupt Endpoint Latency, 32-byte packet (x86 Windows)",
     "figures/latency_32bytes_interrupt_windows.svg",
 )
 
 plot_latencies(
     [latency_isochronous_x86_native_32bytes, latency_isochronous_x86_wasm_32bytes],
-    "Isochronous Endpoint Latency, 32 byte packet (x86 Linux)",
+    "Isochronous Endpoint Latency, 32-byte packet (x86 Linux)",
     "figures/latency_32bytes_isochronous_x86.svg",
 )
 plot_latencies(
@@ -402,7 +402,7 @@ plot_latencies(
         latency_isochronous_aarch64_native_32bytes,
         latency_isochronous_aarch64_wasm_32bytes,
     ],
-    "Isochronous Endpoint Latency, 32 byte packet (AArch64 Linux)",
+    "Isochronous Endpoint Latency, 32-byte packet (AArch64 Linux)",
     "figures/latency_32bytes_isochronous_aarch64.svg",
 )
 plot_latencies(
@@ -410,6 +410,6 @@ plot_latencies(
         latency_isochronous_windows_native_32bytes,
         latency_isochronous_windows_wasm_32bytes,
     ],
-    "Isochronous Endpoint Latency, 32 byte packet (x86 Windows)",
+    "Isochronous Endpoint Latency, 32-byte packet (x86 Windows)",
     "figures/latency_32bytes_isochronous_windows.svg",
 )
