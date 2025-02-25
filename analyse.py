@@ -12,12 +12,12 @@ color_windows_nousb = "#0e67ed"
 color_windows_usb = "#3aa8fc"
 
 ######### File sizes #########
-x86_nousb = 14612  # KB
-x86_usb = 14772  # KB
-aarch64_nousb = 12964  # KB
-aarch64_usb = 13184  # KB
-windows_nousb = 14175  # KB
-windows_usb = 14450  # KB
+x86_nousb = 14612  # KiB
+x86_usb = 14772  # KiB
+aarch64_nousb = 12964  # KiB
+aarch64_usb = 13184  # KiB
+windows_nousb = 14175  # KiB
+windows_usb = 14450  # KiB
 
 
 # function to add value labels
@@ -27,14 +27,14 @@ def add_labels_barplot(y):
     for i in range(len(y)):
         if i % 2 == 0:
             plt.text(
-                i, y[i] + yrange * 0.0075, f"{y[i]:.0f} kB", ha="center", va="bottom"
+                i, y[i] + yrange * 0.0075, f"{y[i]:.0f} KiB", ha="center", va="bottom"
             )
         else:
             percentage_increase = (y[i] - y[i - 1]) / y[i - 1] * 100
             plt.text(
                 i,
                 y[i] + yrange * 0.0075,
-                f"{y[i]:.0f} kB ({percentage_increase:+.1f}%)",
+                f"{y[i]:.0f} KiB ({percentage_increase:+.1f}%)",
                 ha="center",
                 va="bottom",
             )
@@ -64,7 +64,7 @@ def add_labels_boxplot(y, unit: str, precision: int = 0):
 
 
 plt.figure(figsize=(10, 6))
-plt.ylabel("File Size (kB)")
+plt.ylabel("File Size (KiB)")
 x = [
     "x86 Linux\nBaseline",
     "x86 Linux\nUSB",
@@ -84,7 +84,7 @@ colors = [
 ]
 plt.bar(x, y, color=colors)
 add_labels_barplot(y)
-plt.savefig("figures/filesize.svg")
+plt.savefig("figures/filesize.pdf")
 plt.close()
 
 ######### Memory usage #########
@@ -125,7 +125,7 @@ avg_windows_nousb_mem = sum(windows_nousb_mem) / len(windows_nousb_mem)
 avg_windows_usb_mem = sum(windows_usb_mem) / len(windows_usb_mem)
 
 plt.figure(figsize=(10, 6))
-plt.ylabel("Memory Usage (kB)")
+plt.ylabel("Memory Usage (KiB)")
 x = [
     "x86 Linux\nBaseline",
     "x86 Linux\nUSB",
@@ -144,7 +144,7 @@ y = [
 ]
 plt.bar(x, y, color=colors)
 add_labels_barplot(y)
-plt.savefig("figures/memory.svg")
+plt.savefig("figures/memory.pdf")
 plt.close()
 
 ######### Throughput #########
